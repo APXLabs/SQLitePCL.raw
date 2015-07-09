@@ -100,6 +100,7 @@ namespace SQLitePCL
     using System.Runtime.InteropServices;
 #if PINVOKE_ANYCPU_NET45
     using System.Reflection;
+    using System.IO;
 #endif
 #if PLATFORM_IOS
     using MonoTouch;
@@ -1233,11 +1234,18 @@ namespace SQLitePCL
 #else
 		    var currentAssembly = typeof(NativeMethods).GetTypeInfo().Assembly;
 #endif
-        var directory = AppDomain.CurrentDomain.BaseDirectory ?? System.Environment.CurrentDirectory;
-		    if (TryLoadFromDirectory("sqlite3.dll", new Uri(directory).LocalPath))
-		    {
-			return;
+
+            var directory = AppDomain.CurrentDomain.BaseDirectory;
+            if(directory == null) {
+                var codeBase = currentAssembly.CodeBase;
+		        UriBuilder uri = new UriBuilder(codeBase);
+		        directory = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
+            }
+
+		    if (TryLoadFromDirectory("sqlite3.dll", new Uri(directory).LocalPath)) {
+			    return;
 		    }
+
 		    throw new Exception("sqlite3.dll was not loaded.");
 	    }
         }
