@@ -32,14 +32,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="platform.net35.pinvoke_sqlite3.anycpu.csproj">
-      <Project>{084F8A7A-FD6D-4F7D-8A13-DE9B1D71EFE4}</Project>
-      <Name>platform.net35.pinvoke_sqlite3.anycpu</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\src\cs\ugly.cs">
       <Link>ugly.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Couchbase.Lite.Unity\vendor\SQLitePCL\platform.unity.standalone.csproj">
+      <Project>{0E3578A2-D15E-4183-8F0F-638EC8D437B8}</Project>
+      <Name>platform.unity.standalone</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
