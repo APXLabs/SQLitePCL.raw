@@ -49,6 +49,7 @@ namespace SQLitePCL
 			public trace_hook_info trace;
 			public progress_handler_hook_info progress;
 			public profile_hook_info profile;
+            public authorizer_hook_info authorizer;
 
 		    public void free()
 		    {
@@ -61,14 +62,20 @@ namespace SQLitePCL
 			if (trace!=null) trace.free();
 			if (progress!=null) progress.free();
 			if (profile!=null) profile.free();
+			if (authorizer!=null) authorizer.free();
 		    }
 	    }
 
+#if NO_CONCURRENTDICTIONARY
         private static Dictionary<IntPtr,info> _hooks_by_db = new Dictionary<IntPtr,info>();
+#else
+        private static System.Collections.Concurrent.ConcurrentDictionary<IntPtr,info> _hooks_by_db = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr,info>();
+#endif
 
 	internal static info getOrCreateFor(IntPtr db)
 	{
 		info i;
+#if NO_CONCURRENTDICTIONARY
 		lock (_hooks_by_db)
 		{
 			if (!_hooks_by_db.TryGetValue(db, out i))
@@ -77,12 +84,16 @@ namespace SQLitePCL
 				_hooks_by_db[db] = i;
 			}
 		}
-		return i;
+#else
+                i = _hooks_by_db.GetOrAdd(db, (unused) => new info());
+#endif
+                return i;
 	}
 
 	internal static void removeFor(IntPtr db)
 	{
 		info i;
+#if NO_CONCURRENTDICTIONARY
 		lock (_hooks_by_db)
 		{
 			if (_hooks_by_db.TryGetValue(db, out i))
@@ -98,6 +109,12 @@ namespace SQLitePCL
 		{
 			i.free();
 		}
+#else
+                if (_hooks_by_db.TryRemove(db, out i))
+                {
+	            i.free();
+                }
+#endif
 	}
     }
 
@@ -709,6 +726,49 @@ namespace SQLitePCL
             _h.Free();
         }
 
+    };
+
+    internal class authorizer_hook_info
+    {
+        private delegate_authorizer _func;
+        private object _user_data;
+        private GCHandle _h;
+
+        internal authorizer_hook_info(delegate_authorizer func, object v)
+        {
+            _func = func;
+            _user_data = v;
+
+            _h = GCHandle.Alloc(this);
+        }
+
+        internal IntPtr ptr
+        {
+            get
+            {
+                return (IntPtr)_h;
+            }
+        }
+
+        internal static authorizer_hook_info from_ptr(IntPtr p)
+        {
+            GCHandle h = (GCHandle)p;
+            authorizer_hook_info hi = h.Target as authorizer_hook_info;
+            // TODO assert(hi._h == h)
+            return hi;
+        }
+
+        internal int call(int action_code, string param0, string param1, string dbName, string inner_most_trigger_or_view)
+        {
+            return _func(_user_data, action_code, param0, param1, dbName, inner_most_trigger_or_view);
+        }
+
+        internal void free()
+        {
+            _func = null;
+            _user_data = null;
+            _h.Free();
+        }
     };
 
 }

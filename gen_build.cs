@@ -152,11 +152,16 @@ public static class projects
 		items_pcl.Add(new config_pcl { env="ios", api="pinvoke", what="packaged_sqlite3", cpu="anycpu"});
 		items_pcl.Add(new config_pcl { env="ios", api="pinvoke", what="packaged_sqlcipher", cpu="anycpu"});
 
-		items_pcl.Add(new config_pcl { env="unified", api="pinvoke", what="sqlite3", cpu="anycpu"});
-		items_pcl.Add(new config_pcl { env="unified", api="pinvoke", what="packaged_sqlite3", cpu="anycpu"});
-		items_pcl.Add(new config_pcl { env="unified", api="pinvoke", what="packaged_sqlcipher", cpu="anycpu"});
+		items_pcl.Add(new config_pcl { env="unified_ios", api="pinvoke", what="sqlite3", cpu="anycpu"});
+		items_pcl.Add(new config_pcl { env="unified_ios", api="pinvoke", what="packaged_sqlite3", cpu="anycpu"});
+		items_pcl.Add(new config_pcl { env="unified_ios", api="pinvoke", what="packaged_sqlcipher", cpu="anycpu"});
+
+		items_pcl.Add(new config_pcl { env="unified_mac", api="pinvoke", what="sqlite3", cpu="anycpu"});
+		items_pcl.Add(new config_pcl { env="unified_mac", api="pinvoke", what="packaged_sqlite3", cpu="anycpu"});
+		items_pcl.Add(new config_pcl { env="unified_mac", api="pinvoke", what="packaged_sqlcipher", cpu="anycpu"});
 
 		items_pcl.Add(new config_pcl { env="net45", api="pinvoke", what="sqlite3", cpu="anycpu"});
+		// TODO items_pcl.Add(new config_pcl { env="net45", api="pinvoke", what="sqlite3", cpu="anycpu", strongname=true});
 		items_pcl.Add(new config_pcl { env="net45", api="pinvoke", what="sqlite3", cpu="x86"});
 		items_pcl.Add(new config_pcl { env="net45", api="pinvoke", what="sqlite3", cpu="x64"});
 		items_pcl.Add(new config_pcl { env="net45", api="pinvoke", what="packaged_sqlite3", cpu="anycpu"});
@@ -542,6 +547,7 @@ public class config_pcl : config_info
 	public string cpu;
 	public string guid;
 	public bool dll; // TODO should be string linkage, so it can be null for cases where it is not used
+	public bool strongname;
 
 	public config_sqlite3 get_sqlite3_item()
 	{
@@ -583,8 +589,10 @@ public class config_pcl : config_info
 		{
 			case "ios":
 				return "MonoTouch";
-			case "unified":
+			case "unified_ios":
 				return "Xamarin.iOS10";
+			case "unified_mac":
+				return "Xamarin.Mac20";
 			case "android":
 				return "MonoAndroid";
 			case "net45":
@@ -637,7 +645,13 @@ public class config_pcl : config_info
 			}
 			else
 			{
-				return string.Format("build\\{0}\\{1}\\{2}\\", get_nuget_framework_name(env), nat(), cpu);
+				if (strongname) 
+				{
+					return string.Format("build\\strongname\\{0}\\{1}\\{2}\\", get_nuget_framework_name(env), nat(), cpu);
+				} else 
+				{
+					return string.Format("build\\{0}\\{1}\\{2}\\", get_nuget_framework_name(env), nat(), cpu);
+				}
 			}
 		}
 		else if ("lib" == where)
@@ -715,6 +729,10 @@ public class config_pcl : config_info
 		{
 			return string.Format("{0}\\{1}", AREA, env);
 		}
+		else if (strongname)
+		{
+			return string.Format("{0}\\strongname\\{1}\\{2}\\{3}", AREA, env, nat(), cpu);
+		}
 		else
 		{
 			return string.Format("{0}\\{1}\\{2}\\{3}", AREA, env, nat(), cpu);
@@ -726,6 +744,10 @@ public class config_pcl : config_info
 		if (is_portable())
 		{
 			return string.Format("portable.{0}", env);
+		}
+		else if (strongname)
+		{
+			return string.Format("platform.strongname.{0}.{1}.{2}", env, nat(), cpu);
 		}
 		else
 		{
@@ -758,7 +780,8 @@ public static class gen
 	private const string GUID_FOLDER = "{2150E333-8FDC-42A3-9474-1A3956D46DE8}";
 	private const string GUID_PCL = "{786C830F-07A1-408B-BD7F-6EE04809D6DB}";
 	private const string GUID_IOS = "{6BC8ED88-2882-458C-8E55-DFD12B67127B}";
-	private const string GUID_UNIFIED = "{FEACFBD2-3405-455C-9665-78FE426C6842}";
+	private const string GUID_UNIFIED_IOS = "{FEACFBD2-3405-455C-9665-78FE426C6842}";
+	private const string GUID_UNIFIED_MAC = "{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1}";
 	private const string GUID_ANDROID = "{EFBA0AD7-5A72-4C68-AF49-83D382785DCF}";
 	private const string GUID_WINRT = "{BC8A1FFA-BEE3-4634-8014-F334798102B3}";
 	private const string GUID_WP8 = "{C089C8C0-30E0-4E22-80C0-CE093F111A43}";
@@ -867,6 +890,12 @@ public static class gen
 		f.WriteElementString("DebugSymbols", debug ? "true" : "false");
 		f.WriteElementString("Optimize", debug ? "false" : "true");
 		f.WriteElementString("DebugType", debug ? "full" : "none");
+
+		if (!debug && cfg.strongname)
+		{
+			f.WriteElementString("SignAssembly", "true");
+			f.WriteElementString("AssemblyOriginatorKeyFile", "strongname.snk");
+		}
 
 		f.WriteEndElement(); // PropertyGroup
 	}
@@ -1540,8 +1569,11 @@ public static class gen
 					case "ios":
 						write_project_type_guids(f, GUID_IOS, GUID_CSHARP);
 						break;
-					case "unified":
-						write_project_type_guids(f, GUID_UNIFIED, GUID_CSHARP);
+					case "unified_ios":
+						write_project_type_guids(f, GUID_UNIFIED_IOS, GUID_CSHARP);
+						break;
+					case "unified_mac":
+						write_project_type_guids(f, GUID_UNIFIED_MAC, GUID_CSHARP);
 						break;
 					case "android":
 						write_project_type_guids(f, GUID_ANDROID, GUID_CSHARP);
@@ -1569,6 +1601,11 @@ public static class gen
 
 			f.WriteEndElement(); // Configuration
 
+			if (cfg.env == "unified_mac") {
+				f.WriteElementString ("TargetFrameworkVersion", "v2.0");
+				f.WriteElementString ("TargetFrameworkIdentifier", "Xamarin.Mac");
+			}
+
 			f.WriteElementString("SchemaVersion", "2.0");
 			f.WriteElementString("Platform", cfg.cpu.Replace(" ", ""));
 			f.WriteElementString("DefaultLanguage", "en-us");
@@ -1595,7 +1632,8 @@ public static class gen
 				case "ios":
 					defines.Add("PLATFORM_IOS");
 					break;
-				case "unified":
+				case "unified_ios":
+				case "unified_mac":
 					defines.Add("PLATFORM_UNIFIED");
 					break;
 				case "android":
@@ -1635,6 +1673,7 @@ public static class gen
 					f.WriteElementString("ThrowErrorsInValidation", "true");
 					defines.Add("WINDOWS_PHONE");
 					defines.Add("SILVERLIGHT");
+					defines.Add("NO_CONCURRENTDICTIONARY");
 					f.WriteElementString("NoStdLib", "true");
 					f.WriteElementString("NoConfig", "true");
 					break;
@@ -1655,6 +1694,7 @@ public static class gen
 					f.WriteElementString("ThrowErrorsInValidation", "true");
 					defines.Add("WINDOWS_PHONE");
 					defines.Add("SILVERLIGHT");
+					defines.Add("NO_CONCURRENTDICTIONARY");
 					f.WriteElementString("NoStdLib", "true");
 					f.WriteElementString("NoConfig", "true");
 					break;
@@ -1677,7 +1717,11 @@ public static class gen
 						{
 							defines.Add("PINVOKE_FROM_PACKAGED_SQLITE3");
 						}
-						else if (cfg.env == "unified")
+						else if (cfg.env == "unified_ios")
+						{
+							defines.Add("PINVOKE_FROM_INTERNAL_SQLITE3");
+						}
+						else if (cfg.env == "unified_mac")
 						{
 							defines.Add("PINVOKE_FROM_INTERNAL_SQLITE3");
 						}
@@ -1699,7 +1743,11 @@ public static class gen
 						{
 							defines.Add("PINVOKE_FROM_PACKAGED_SQLCIPHER");
 						}
-						else if (cfg.env == "unified")
+						else if (cfg.env == "unified_ios")
+						{
+							defines.Add("PINVOKE_FROM_INTERNAL_SQLCIPHER");
+						}
+						else if (cfg.env == "unified_mac")
 						{
 							defines.Add("PINVOKE_FROM_INTERNAL_SQLCIPHER");
 						}
@@ -1759,7 +1807,8 @@ public static class gen
 			switch (cfg.env)
 			{
 				case "ios":
-				case "unified":
+				case "unified_ios":
+				case "unified_mac":
 				case "android":
 				case "net45":
 				case "net40":
@@ -1769,8 +1818,11 @@ public static class gen
 			}
 			switch (cfg.env)
 			{
-				case "unified":
+				case "unified_ios":
 					write_reference(f, "Xamarin.iOS");
+					break;
+				case "unified_mac":
+					write_reference(f, "Xamarin.Mac");
 					break;
 				case "ios":
 					write_reference(f, "monotouch");
@@ -1863,7 +1915,7 @@ public static class gen
 
 				switch (cfg.env)
 				{
-					case "unified":
+					case "unified_ios":
 						f.WriteStartElement("Import");
 						f.WriteAttributeString("Project", "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.CSharp.targets");
 						f.WriteEndElement(); // Import
@@ -1896,6 +1948,40 @@ public static class gen
 
                             f.WriteEndElement(); // ItemGroup
                         }
+						break;
+					case "unified_mac":
+						f.WriteStartElement("Import");
+						f.WriteAttributeString("Project", "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.CSharp.targets");
+						f.WriteEndElement(); // Import
+
+						if (cfg.what == "packaged_sqlite3")
+						{
+							f.WriteStartElement("ItemGroup");
+							// TODO warning says this is deprecated
+							f.WriteStartElement("ManifestResourceWithNoCulture");
+							f.WriteAttributeString("Include", Path.Combine(root, "apple\\libs\\mac\\packaged_sqlite3.a"));
+							f.WriteElementString("Link", "packaged_sqlite3.a");
+							f.WriteEndElement(); // ManifestResourceWithNoCulture
+							f.WriteEndElement(); // ItemGroup
+						}
+						if (cfg.what == "packaged_sqlcipher")
+						{
+							f.WriteStartElement("ItemGroup");
+
+							// TODO warning says this is deprecated
+							f.WriteStartElement("ManifestResourceWithNoCulture");
+							f.WriteAttributeString("Include", Path.Combine(root, "apple\\libs\\mac\\packaged_sqlcipher.a"));
+							f.WriteElementString("Link", "packaged_sqlcipher.a");
+							f.WriteEndElement(); // ManifestResourceWithNoCulture
+
+							// TODO warning says this is deprecated
+							f.WriteStartElement("ManifestResourceWithNoCulture");
+							f.WriteAttributeString("Include", Path.Combine(root, "apple\\libs\\mac\\libcrypto.a"));
+							f.WriteElementString("Link", "libcrypto.a");
+							f.WriteEndElement(); // ManifestResourceWithNoCulture
+
+							f.WriteEndElement(); // ItemGroup
+						}
 						break;
 					case "ios":
 						f.WriteStartElement("Import");
@@ -2033,8 +2119,11 @@ public static class gen
 				case "ios":
 					write_project_type_guids(f, GUID_IOS, GUID_CSHARP);
 					break;
-				case "unified":
-					write_project_type_guids(f, GUID_UNIFIED, GUID_CSHARP);
+				case "unified_ios":
+					write_project_type_guids(f, GUID_UNIFIED_IOS, GUID_CSHARP);
+					break;
+				case "unified_mac":
+					write_project_type_guids(f, GUID_UNIFIED_MAC, GUID_CSHARP);
 					break;
 				case "android":
 					write_project_type_guids(f, GUID_ANDROID, GUID_CSHARP);
@@ -2064,6 +2153,11 @@ public static class gen
 
 			f.WriteEndElement(); // Configuration
 
+			if (cfg.env == "unified_mac") {
+				f.WriteElementString ("TargetFrameworkVersion", "v2.0");
+				f.WriteElementString ("TargetFrameworkIdentifier", "Xamarin.Mac");
+			}
+
 			f.WriteElementString("SchemaVersion", "2.0");
 			//f.WriteElementString("Platform", cfg.cpu.Replace(" ", ""));
 			f.WriteElementString("DefaultLanguage", "en-us");
@@ -2090,7 +2184,8 @@ public static class gen
 				case "ios":
 					defines.Add("PLATFORM_IOS");
 					break;
-				case "unified":
+				case "unified_ios":
+				case "unified_mac":
 					defines.Add("PLATFORM_UNIFIED");
 					break;
 				case "android":
@@ -2162,7 +2257,8 @@ public static class gen
 			f.WriteStartElement("ItemGroup");
 			switch (cfg.env)
 			{
-				case "unified":
+				case "unified_ios":
+				case "unified_mac":
 				case "ios":
 				case "android":
 					break;
@@ -2179,8 +2275,11 @@ public static class gen
 			}
 			switch (cfg.env)
 			{
-				case "unified":
+				case "unified_ios":
 					write_reference(f, "Xamarin.iOS");
+					break;
+				case "unified_mac":
+					write_reference (f, "Xamarin.Mac");
 					break;
 				case "ios":
 					write_reference(f, "monotouch");
@@ -2264,9 +2363,14 @@ public static class gen
 
 				switch (cfg.env)
 				{
-					case "unified":
+					case "unified_ios":
 						f.WriteStartElement("Import");
 						f.WriteAttributeString("Project", "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.CSharp.targets");
+						f.WriteEndElement(); // Import
+						break;
+					case "unified_mac":
+						f.WriteStartElement("Import");
+						f.WriteAttributeString("Project", "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.CSharp.targets");
 						f.WriteEndElement(); // Import
 						break;
 					case "ios":
@@ -2539,6 +2643,8 @@ public static class gen
 			}
 			foreach (config_pcl cfg in projects.items_pcl)
 			{
+				if (cfg.env == "unified_mac") continue;
+
 				f.WriteLine("\t\t{0}.Debug|Mixed Platforms.ActiveCfg = Debug|{1}", cfg.guid, cfg.fixed_cpu());
 				f.WriteLine("\t\t{0}.Debug|Mixed Platforms.Build.0 = Debug|{1}", cfg.guid, cfg.fixed_cpu());
 				f.WriteLine("\t\t{0}.Release|Mixed Platforms.ActiveCfg = Release|{1}", cfg.guid, cfg.fixed_cpu());
@@ -2673,8 +2779,8 @@ public static class gen
 		f.WriteEndElement(); // file
 	}
 
-	private const string NUSPEC_VERSION = "0.8.0";
-	private const string NUSPEC_RELEASE_NOTES = "Fix several problems with hook functions and multiple SQLite connections and threads.  Add support for .NET 4.0.  Added msbuild-controlled option to use a bundled SQLite3 library for non-Windows platforms.  Started transition toward removing _basic from the nuget pkg id, resulting in one version of the SQLitePCL.raw pkg to cover all use cases.";
+	private const string NUSPEC_VERSION = "0.8.1";
+	private const string NUSPEC_RELEASE_NOTES = "Update SQLite to 3.8.10.2.  Update OpenSSL libcrypto to 1.0.1p.  Add set_authorizer feature.  Add support for Xamarin.Mac.  Keep track of hooks with a ConcurrentDictionary where possible.  On Windows, when dynamic DLL load fails, fallback to normal approach.";
 
 	private static void gen_nuspec_basic(string top, string root, string id)
 	{
@@ -2805,22 +2911,22 @@ public static class gen
                         );
 
 #if not // TODO a targets file here would be helpful for Xam studio mac stuff.  but then all of net45 needs to move from lib to build.
-                string tname = string.Format("{0}.targets", "unified");
+                string tname = string.Format("{0}.targets", "unified_ios");
 
 		f.WriteComment("empty directory in lib to avoid nuget adding a reference to the bait");
 
-		Directory.CreateDirectory(Path.Combine(Path.Combine(top, "empty"), config_pcl.get_nuget_framework_name("unified")));
+		Directory.CreateDirectory(Path.Combine(Path.Combine(top, "empty"), config_pcl.get_nuget_framework_name("unified_ios")));
 
 		f.WriteStartElement("file");
-		f.WriteAttributeString("src", string.Format("empty\\{0}\\", config_pcl.get_nuget_framework_name("unified")));
-		f.WriteAttributeString("target", string.Format("lib\\{0}", config_pcl.get_nuget_framework_name("unified")));
+		f.WriteAttributeString("src", string.Format("empty\\{0}\\", config_pcl.get_nuget_framework_name("unified_ios")));
+		f.WriteAttributeString("target", string.Format("lib\\{0}", config_pcl.get_nuget_framework_name("unified_ios")));
 		f.WriteEndElement(); // file
 
                 gen_nuget_targets_android_or_unified_packaged_sqlite3(top, tname, a);
 
                 f.WriteStartElement("file");
                 f.WriteAttributeString("src", tname);
-                f.WriteAttributeString("target", string.Format("build\\{0}\\{1}.targets", config_pcl.get_nuget_framework_name("unified"), id));
+                f.WriteAttributeString("target", string.Format("build\\{0}\\{1}.targets", config_pcl.get_nuget_framework_name("unified_ios"), id));
                 f.WriteEndElement(); // file
 #endif
             }
@@ -2828,7 +2934,7 @@ public static class gen
                 // --------------------------------
             {
                 var a = projects.find_pcls(
-                    "unified",
+                    "unified_ios",
                     "pinvoke",
                     null,
                     "anycpu",
@@ -2838,26 +2944,58 @@ public static class gen
                         a
                         );
 
-                string tname = string.Format("{0}.targets", "unified");
+                string tname = string.Format("{0}.targets", "unified_ios");
 
 		f.WriteComment("empty directory in lib to avoid nuget adding a reference to the bait");
 
-		Directory.CreateDirectory(Path.Combine(Path.Combine(top, "empty"), config_pcl.get_nuget_framework_name("unified")));
+		Directory.CreateDirectory(Path.Combine(Path.Combine(top, "empty"), config_pcl.get_nuget_framework_name("unified_ios")));
 
 		f.WriteStartElement("file");
-		f.WriteAttributeString("src", string.Format("empty\\{0}\\", config_pcl.get_nuget_framework_name("unified")));
-		f.WriteAttributeString("target", string.Format("lib\\{0}", config_pcl.get_nuget_framework_name("unified")));
+		f.WriteAttributeString("src", string.Format("empty\\{0}\\", config_pcl.get_nuget_framework_name("unified_ios")));
+		f.WriteAttributeString("target", string.Format("lib\\{0}", config_pcl.get_nuget_framework_name("unified_ios")));
 		f.WriteEndElement(); // file
 
                 gen_nuget_targets_android_or_unified_packaged_sqlite3(top, tname, a);
 
                 f.WriteStartElement("file");
                 f.WriteAttributeString("src", tname);
-                f.WriteAttributeString("target", string.Format("build\\{0}\\{1}.targets", config_pcl.get_nuget_framework_name("unified"), id));
+                f.WriteAttributeString("target", string.Format("build\\{0}\\{1}.targets", config_pcl.get_nuget_framework_name("unified_ios"), id));
                 f.WriteEndElement(); // file
             }
 
                 // --------------------------------
+			{
+				var a = projects.find_pcls(
+					"unified_mac",
+					"pinvoke",
+					null,
+					"anycpu",
+					null
+				);
+				write_nuspec_file_entries(f, "build",
+					a
+				);
+
+				string tname = string.Format("{0}.targets", "unified_mac");
+
+				f.WriteComment("empty directory in lib to avoid nuget adding a reference to the bait");
+
+				Directory.CreateDirectory(Path.Combine(Path.Combine(top, "empty"), config_pcl.get_nuget_framework_name("unified_mac")));
+
+				f.WriteStartElement("file");
+				f.WriteAttributeString("src", string.Format("empty\\{0}\\", config_pcl.get_nuget_framework_name("unified_mac")));
+				f.WriteAttributeString("target", string.Format("lib\\{0}", config_pcl.get_nuget_framework_name("unified_mac")));
+				f.WriteEndElement(); // file
+
+				gen_nuget_targets_android_or_unified_packaged_sqlite3(top, tname, a);
+
+				f.WriteStartElement("file");
+				f.WriteAttributeString("src", tname);
+				f.WriteAttributeString("target", string.Format("build\\{0}\\{1}.targets", config_pcl.get_nuget_framework_name("unified_mac"), id));
+				f.WriteEndElement(); // file
+			}
+
+			// --------------------------------
             {
                 var a = projects.find_pcls(
                     "android",
@@ -2895,7 +3033,8 @@ public static class gen
 			Dictionary<string, string> pcl_env_pinvoke = new Dictionary<string, string>();
 			pcl_env_pinvoke["ios"] = null;
 			// not here: pcl_env_pinvoke["android"] = null;
-			// not here: pcl_env_pinvoke["unified"] = null;
+			// not here: pcl_env_pinvoke["unified_ios"] = null;
+			// not here: pcl_env_pinvoke["unified_mac"] = null;
 			pcl_env_pinvoke["net45"] = null;
 			pcl_env_pinvoke["net40"] = null;
 			pcl_env_pinvoke["winrt80"] = null;
@@ -2915,7 +3054,8 @@ public static class gen
 						);
 
 				if ("ios" == env) continue; // Xamarin.iOS classic can't do .targets files
-				if ("unified" == env) continue; // TODO fix this to handle packaged sqlite
+				if ("unified_ios" == env) continue; // TODO fix this to handle packaged sqlite
+				if ("unified_mac" == env) continue; // TODO fix this to handle packaged sqlite
 				if ("android" == env) continue; // TODO fix this to handle packaged sqlite
 
 				string tname = string.Format("{0}.targets", env);
@@ -3528,11 +3668,23 @@ public static class gen
 
 		using (TextWriter tw = new StreamWriter(Path.Combine(top, "build.ps1")))
 		{
+			tw.WriteLine("cp ../strongname.snk .");
 			tw.WriteLine("msbuild /p:Configuration=Release sqlitepcl.sln");
+		}
+
+		using (TextWriter tw = new StreamWriter(Path.Combine(top, "build_mac.sh")))
+		{
+			tw.WriteLine("xbuild /p:Configuration=Release platform.unified_mac.pinvoke_packaged_sqlcipher.anycpu.csproj");
+			tw.WriteLine("xbuild /p:Configuration=Release platform.unified_mac.pinvoke_packaged_sqlite3.anycpu.csproj");
+			tw.WriteLine("xbuild /p:Configuration=Release platform.unified_mac.pinvoke_sqlite3.anycpu.csproj");
+            tw.WriteLine("cp -r ./release/bin/pcl/unified_mac/pinvoke_sqlite3 ../apple/libs/mac");
+            tw.WriteLine("cp -r ./release/bin/pcl/unified_mac/pinvoke_packaged_sqlite3 ../apple/libs/mac");
+            tw.WriteLine("cp -r ./release/bin/pcl/unified_mac/pinvoke_packaged_sqlcipher ../apple/libs/mac");
 		}
 
 		using (TextWriter tw = new StreamWriter(Path.Combine(top, "pack.ps1")))
 		{
+			tw.WriteLine("echo \"Run apple/libs/mac/cp_mac.ps1\"");
 			tw.WriteLine("# TODO");
 			tw.WriteLine("../../nuget pack SQLitePCL.raw.nuspec");
 			tw.WriteLine("../../nuget pack SQLitePCL.raw_basic.nuspec");

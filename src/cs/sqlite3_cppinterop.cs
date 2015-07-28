@@ -553,6 +553,42 @@ namespace SQLitePCL
             }
         }
 
+        // ----------------------------------------------------------------
+
+        // Passing a callback into SQLite is tricky.  See comments near commit_hook
+        // implementation in pinvoke/SQLite3Provider.cs
+
+        static private int authorizer_hook_bridge_impl(IntPtr p, int action_code, IntPtr param0, IntPtr param1, IntPtr dbName, IntPtr inner_most_trigger_or_view)
+        {
+            authorizer_hook_info hi = authorizer_hook_info.from_ptr(p);
+            return hi.call(action_code, util.from_utf8(param0), util.from_utf8(param1), util.from_utf8(dbName), util.from_utf8(inner_most_trigger_or_view));
+        }
+
+        [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl)]
+        private delegate int callback_authorizer(IntPtr puser, int action_code, IntPtr param0, IntPtr param1, IntPtr dbName, IntPtr inner_most_trigger_or_view);
+
+        callback_authorizer authorizer_hook_bridge = new callback_authorizer(authorizer_hook_bridge_impl);
+
+        int ISQLite3Provider.sqlite3_set_authorizer(IntPtr db, delegate_authorizer func, object v)
+        {
+		var info = hooks.getOrCreateFor(db);
+            if (info.authorizer != null)
+            {
+                // TODO maybe turn off the hook here, for now
+                info.authorizer.free();
+                info.authorizer = null;
+            }
+
+            if (func != null)
+            {
+                info.authorizer = new authorizer_hook_info(func, v);
+                return SQLite3RuntimeProvider.sqlite3_set_authorizer(db.ToInt64(), Marshal.GetFunctionPointerForDelegate(authorizer_hook_bridge).ToInt64(), info.authorizer.ptr.ToInt64());
+            }
+            else
+            {
+                return SQLite3RuntimeProvider.sqlite3_set_authorizer(db.ToInt64(), IntPtr.Zero.ToInt64(), IntPtr.Zero.ToInt64());
+            }
+        }
 
         // ----------------------------------------------------------------
 
