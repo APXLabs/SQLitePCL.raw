@@ -1662,7 +1662,9 @@ namespace SQLitePCL
 #endif
             public delegate int callback_progress_handler(IntPtr puser);
 
+#if !PLATFORM_UNIFIED && !PLATFORM_IOS
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+#endif
             public delegate int callback_authorizer(IntPtr puser, int action_code, IntPtr param0, IntPtr param1, IntPtr dbName, IntPtr inner_most_trigger_or_view);
 
             [DllImport(SQLITE_DLL, CallingConvention = CallingConvention.Cdecl)]
