@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -37,9 +37,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Couchbase.Lite.Unity\vendor\SQLitePCL\platform.unity.standalone.csproj">
-      <Project>{0E3578A2-D15E-4183-8F0F-638EC8D437B8}</Project>
-      <Name>platform.unity.standalone</Name>
+    <ProjectReference Include="platform.net35.pinvoke_sqlite3.anycpu.csproj">
+      <Project>{084f8a7a-fd6d-4f7d-8a13-de9b1d71efe4}</Project>
+      <Name>platform.net35.pinvoke_sqlite3.anycpu</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
