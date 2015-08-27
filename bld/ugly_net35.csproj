@@ -8,6 +8,7 @@
     <RootNamespace>ugly_net35</RootNamespace>
     <AssemblyName>ugly_net35</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ReleaseVersion>1.1.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="platform.net35.pinvoke_sqlite3.anycpu.csproj">
-      <Project>{084f8a7a-fd6d-4f7d-8a13-de9b1d71efe4}</Project>
+      <Project>{084F8A7A-FD6D-4F7D-8A13-DE9B1D71EFE4}</Project>
       <Name>platform.net35.pinvoke_sqlite3.anycpu</Name>
     </ProjectReference>
   </ItemGroup>

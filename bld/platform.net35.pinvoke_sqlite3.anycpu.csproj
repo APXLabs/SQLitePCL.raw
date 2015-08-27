@@ -12,6 +12,7 @@
     <RootNamespace>SQLitePCL</RootNamespace>
     <AssemblyName>SQLitePCL.raw</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ReleaseVersion>1.1.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|anycpu' ">
     <OutputPath>debug\bin\pcl\net45\pinvoke_sqlite3\anycpu\</OutputPath>
