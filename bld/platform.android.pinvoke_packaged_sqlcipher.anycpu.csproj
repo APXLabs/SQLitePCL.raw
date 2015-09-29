@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Automatically generated-->
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <ProjectGuid>{1E1A3DD6-6C0F-499C-95DD-FFFA2C83B9B1}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">anycpu</Platform>
+    <DefaultLanguage>en-us</DefaultLanguage>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SQLitePCL</RootNamespace>
+    <AssemblyName>SQLitePCL.raw</AssemblyName>
+    <AndroidUseLatestPlatformdk>true</AndroidUseLatestPlatformdk>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|anycpu' ">
+    <OutputPath>debug\bin\pcl\android\pinvoke_packaged_sqlcipher\anycpu\</OutputPath>
+    <IntermediateOutputPath>debug\obj\pcl\android\pinvoke_packaged_sqlcipher\anycpu\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;__MOBILE__;__ANDROID__;PINVOKE_FROM_PACKAGED_SQLCIPHER;</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|anycpu' ">
+    <OutputPath>release\bin\pcl\android\pinvoke_packaged_sqlcipher\anycpu\</OutputPath>
+    <IntermediateOutputPath>release\obj\pcl\android\pinvoke_packaged_sqlcipher\anycpu\</IntermediateOutputPath>
+    <DefineConstants>__MOBILE__;__ANDROID__;PINVOKE_FROM_PACKAGED_SQLCIPHER;</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\src\cs\AssemblyInfo.cs" />
+    <Compile Include="..\src\cs\raw.cs" />
+    <Compile Include="..\src\cs\intptrs.cs" />
+    <Compile Include="..\src\cs\isqlite3.cs" />
+    <Compile Include="..\src\cs\sqlite3_pinvoke.cs" />
+    <Compile Include="..\src\cs\util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedNativeLibrary Include="..\android\sqlcipher\libs\x86\libpackaged_sqlcipher.so">
+      <Link>x86\libpackaged_sqlcipher.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
+    <EmbeddedNativeLibrary Include="..\android\sqlcipher\libs\x86_64\libpackaged_sqlcipher.so">
+      <Link>x86_64\libpackaged_sqlcipher.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
+    <EmbeddedNativeLibrary Include="..\android\sqlcipher\libs\armeabi\libpackaged_sqlcipher.so">
+      <Link>armeabi\libpackaged_sqlcipher.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
+    <EmbeddedNativeLibrary Include="..\android\sqlcipher\libs\arm64-v8a\libpackaged_sqlcipher.so">
+      <Link>arm64-v8a\libpackaged_sqlcipher.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
+    <EmbeddedNativeLibrary Include="..\android\sqlcipher\libs\armeabi-v7a\libpackaged_sqlcipher.so">
+      <Link>armeabi-v7a\libpackaged_sqlcipher.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+</Project>
