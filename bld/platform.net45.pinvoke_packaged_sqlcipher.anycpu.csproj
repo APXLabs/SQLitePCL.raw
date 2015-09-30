@@ -5,6 +5,7 @@
   <PropertyGroup>
     <IsMac>false</IsMac>
     <IsMac Condition=" '$(OS)' == 'Unix' AND Exists('/Library/Frameworks') ">true</IsMac>
+    <ReleaseVersion>1.1.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ProjectGuid>{8E62D3FC-CE27-427F-A060-F86DA48142F8}</ProjectGuid>
@@ -24,16 +25,11 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="sh $(ProjectDir)/../sqlcipher/build_osx.sh" workingdir="$(ProjectDir)/../sqlcipher/" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|anycpu' ">
     <OutputPath>release\bin\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</OutputPath>
     <IntermediateOutputPath>release\obj\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</IntermediateOutputPath>
-    <DefineConstants>PINVOKE_FROM_PACKAGED_SQLITE3;</DefineConstants>
+    <DefineConstants>PINVOKE_FROM_PACKAGED_SQLCIPHER;</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
   </PropertyGroup>
@@ -51,8 +47,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="$(ProjectDir)..\sqlcipher\libpackaged_sqlcipher.dylib" Condition=" $(IsMac) ">
+    <None Include="..\sqlcipher\libpackaged_sqlcipher.dylib" Condition=" $(IsMac) ">
       <Link>libpackaged_sqlcipher.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\sqlcipher\libpackaged_sqlcipher.so" Condition=" '$(OS)' == 'Unix' AND !$(IsMac)">
+      <Link>libpackaged_sqlcipher.so</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
