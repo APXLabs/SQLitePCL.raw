@@ -15,17 +15,22 @@
     <ReleaseVersion>1.1.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|anycpu' ">
-    <OutputPath>debug\bin\pcl\net45\pinvoke_sqlite3\anycpu\</OutputPath>
-    <IntermediateOutputPath>debug\obj\pcl\net45\pinvoke_sqlite3\anycpu\</IntermediateOutputPath>
-    <DefineConstants>DEBUG;PINVOKE_ANYCPU_NET45;OLD_REFLECTION;</DefineConstants>
+    <OutputPath>debug\bin\net35\</OutputPath>
+    <IntermediateOutputPath>debug\obj\net35\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;PINVOKE_FROM_PACKAGED_SQLCIPHER;OLD_REFLECTION;</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="Build" command="xbuild ${ProjectFile}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|anycpu' ">
-    <OutputPath>release\bin\pcl\net45\pinvoke_sqlite3\anycpu\</OutputPath>
-    <IntermediateOutputPath>release\obj\pcl\net45\pinvoke_sqlite3\anycpu\</IntermediateOutputPath>
-    <DefineConstants>PINVOKE_ANYCPU_NET45;OLD_REFLECTION;</DefineConstants>
+    <OutputPath>release\bin\net35\</OutputPath>
+    <IntermediateOutputPath>release\obj\net35\</IntermediateOutputPath>
+    <DefineConstants>PINVOKE_FROM_PACKAGED_SQLCIPHER;OLD_REFLECTION;</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +49,17 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\Rackspace\Rackspace.Threading\System.Threading.Tasks.Net35\System.Threading.Tasks.Net35.csproj">
+    <None Include="..\sqlcipher\libpackaged_sqlcipher.dylib" Condition=" $(OS) == 'Unix' AND Exists('/Library/Frameworks') ">
+      <Link>libpackaged_sqlcipher.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\sqlcipher\libpackaged_sqlcipher.so" Condition=" $(OS) == 'Unix' AND !Exists('/Library/Frameworks') ">
+      <Link>libpackaged_sqlcipher.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Couchbase.Lite.Net35\vendor\Rackspace\Rackspace.Threading\System.Threading.Tasks.Net35\System.Threading.Tasks.Net35.csproj">
       <Project>{DCB5D745-525C-46A1-BFC0-E12F87AB6165}</Project>
       <Name>System.Threading.Tasks.Net35</Name>
     </ProjectReference>

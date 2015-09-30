@@ -348,7 +348,7 @@ namespace SQLitePCL
         {
             GCHandle pinned = GCHandle.Alloc(b, GCHandleType.Pinned);
             IntPtr ptr = pinned.AddrOfPinnedObject();
-            int rc = NativeMethods.other_sqlite3_blob_read(blob, ptr + bOffset, n, offset);
+            int rc = NativeMethods.other_sqlite3_blob_read(blob, new IntPtr(ptr.ToInt64() + bOffset), n, offset);
             pinned.Free();
 	    return rc;
         }
@@ -357,7 +357,7 @@ namespace SQLitePCL
         {
             GCHandle pinned = GCHandle.Alloc(b, GCHandleType.Pinned);
             IntPtr ptr = pinned.AddrOfPinnedObject();
-            int rc = NativeMethods.other_sqlite3_blob_write(blob, ptr + bOffset, n, offset);
+            int rc = NativeMethods.other_sqlite3_blob_write(blob, new IntPtr(ptr.ToInt64() + bOffset), n, offset);
             pinned.Free();
 	    return rc;
         }
