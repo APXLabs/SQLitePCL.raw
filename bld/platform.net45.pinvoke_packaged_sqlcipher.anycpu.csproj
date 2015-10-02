@@ -21,7 +21,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|anycpu' ">
     <OutputPath>debug\bin\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</OutputPath>
     <IntermediateOutputPath>debug\obj\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</IntermediateOutputPath>
-    <DefineConstants>DEBUG;PINVOKE_FROM_PACKAGED_SQLCIPHER;</DefineConstants>
+    <DefineConstants>DEBUG;PINVOKE_FROM_PACKAGED_SQLCIPHER;OLD_REFLECTION</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|anycpu' ">
     <OutputPath>release\bin\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</OutputPath>
     <IntermediateOutputPath>release\obj\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</IntermediateOutputPath>
-    <DefineConstants>PINVOKE_FROM_PACKAGED_SQLCIPHER;</DefineConstants>
+    <DefineConstants>PINVOKE_FROM_PACKAGED_SQLCIPHER;OLD_REFLECTION</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
   </PropertyGroup>
@@ -53,6 +53,14 @@
     </None>
     <None Include="..\sqlcipher\libpackaged_sqlcipher.so" Condition=" '$(OS)' == 'Unix' AND !$(IsMac)">
       <Link>libpackaged_sqlcipher.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\sqlcipher\x86\packaged_sqlcipher.dll" Condition=" '$(OS)' == 'Windows_NT' ">
+      <Link>x86\packaged_sqlcipher.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\sqlcipher\x64\packaged_sqlcipher.dll" Condition=" '$(OS)' == 'Windows_NT' ">
+      <Link>x64\packaged_sqlcipher.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -1205,9 +1205,11 @@ namespace SQLitePCL
 #elif PINVOKE_FROM_SQLITE3_DLL
         private const string SQLITE_DLL = "sqlite3.dll";
 #elif PINVOKE_ANYCPU_NET45
-        private const string SQLITE_DLL = "sqlite3";
+            private const string SQLITE_DLL = "sqlite3";
+#endif
 
-	// TODO can the code below be adapted to cope with Mono on Mac or Linux?
+#if PINVOKE_ANYCPU_NET45 || PINVOKE_FROM_PACKAGED_SQLCIPHER
+        // TODO can the code below be adapted to cope with Mono on Mac or Linux?
 
         // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
         // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
@@ -1247,7 +1249,7 @@ namespace SQLitePCL
 #else
 		    var currentAssembly = typeof(NativeMethods).GetTypeInfo().Assembly;
 #endif
-		    if (TryLoadFromDirectory("sqlite3.dll", new Uri(AppDomain.CurrentDomain.BaseDirectory).LocalPath))
+		    if (TryLoadFromDirectory(SQLITE_DLL + ".dll", new Uri(AppDomain.CurrentDomain.BaseDirectory).LocalPath))
 		    {
 			return;
 		    }
