@@ -1,11 +1,20 @@
 @echo off
+SETLOCAL ENABLEEXTENSIONS
+if EXIST x86 (
+	if EXIST x64 (
+		echo Native libraries already built
+		exit /b
+	)
+)
+
+IF NOT DEFINED VCINSTALLDIR (
+	echo This script must be run from a Visual Studio command prompt
+	exit /b 1
+)
+
 if NOT EXIST jni\tomcrypt (
 	git clone https://github.com/libtom/libtomcrypt jni\tomcrypt
-) else (
-	pushd jni\tomcrypt
-	git stash
-	git pull origin
-	popd
+	git checkout bd7933cc2b43ebe7c4349614c6cf1271251ebee4
 )
 
 call "%VCINSTALLDIR%vcvarsall" x86

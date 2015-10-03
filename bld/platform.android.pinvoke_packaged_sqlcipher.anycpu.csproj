@@ -18,20 +18,15 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|anycpu' ">
     <OutputPath>debug\bin\pcl\android\pinvoke_packaged_sqlcipher\anycpu\</OutputPath>
     <IntermediateOutputPath>debug\obj\pcl\android\pinvoke_packaged_sqlcipher\anycpu\</IntermediateOutputPath>
-    <DefineConstants>DEBUG;__MOBILE__;__ANDROID__;PINVOKE_FROM_PACKAGED_SQLCIPHER;</DefineConstants>
+    <DefineConstants>DEBUG;__MOBILE__;__ANDROID__;PINVOKE_FROM_PACKAGED_SQLCIPHER;OLD_REFLECTION</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="$(ProjectDir)/../sqlcipher/build_android.sh" workingdir="" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|anycpu' ">
     <OutputPath>release\bin\pcl\android\pinvoke_packaged_sqlcipher\anycpu\</OutputPath>
     <IntermediateOutputPath>release\obj\pcl\android\pinvoke_packaged_sqlcipher\anycpu\</IntermediateOutputPath>
-    <DefineConstants>__MOBILE__;__ANDROID__;PINVOKE_FROM_PACKAGED_SQLCIPHER;</DefineConstants>
+    <DefineConstants>__MOBILE__;__ANDROID__;PINVOKE_FROM_PACKAGED_SQLCIPHER;OLD_REFLECTION</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
   </PropertyGroup>
@@ -49,13 +44,7 @@
     <Compile Include="..\src\cs\util.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="arm64-v8a\" />
-    <Folder Include="armeabi\" />
-    <Folder Include="armeabi-v7a\" />
-    <Folder Include="x86\" />
-    <Folder Include="x86_64\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedNativeLibrary Include="..\sqlcipher\libs\arm64-v8a\libpackaged_sqlcipher.so">
       <Link>arm64-v8a\libpackaged_sqlcipher.so</Link>

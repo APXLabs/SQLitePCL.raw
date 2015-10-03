@@ -1220,15 +1220,15 @@ namespace SQLitePCL
 
         private static bool TryLoadFromDirectory(string dllName, string baseDirectory)
         {
-            System.Diagnostics.Debug.Assert(!string.IsNullOrWhiteSpace(dllName), "dllName is null or empty.");
-            System.Diagnostics.Debug.Assert(!string.IsNullOrWhiteSpace(baseDirectory), "baseDirectory is null or empty.");
+            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(dllName), "dllName is null or empty.");
+            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(baseDirectory), "baseDirectory is null or empty.");
             System.Diagnostics.Debug.Assert(System.IO.Path.IsPathRooted(baseDirectory), "baseDirectory is not rooted.");
 
             var architecture = IntPtr.Size == 4
                 ? "x86"
                 : "x64";
 
-            var dllPath = System.IO.Path.Combine(baseDirectory, architecture, dllName);
+            var dllPath = System.IO.Path.Combine(System.IO.Path.Combine(baseDirectory, architecture), dllName);
             if (!System.IO.File.Exists(dllPath))
 	    {
                 return false;

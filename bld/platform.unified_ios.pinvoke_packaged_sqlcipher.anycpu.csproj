@@ -21,11 +21,6 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="$(ProjectDir)/../sqlcipher/build_ios.sh" workingdir="$(ProjectDir)/../sqlcipher/" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|anycpu' ">
     <OutputPath>release\bin\pcl\unified_ios\pinvoke_packaged_sqlcipher\anycpu\</OutputPath>
