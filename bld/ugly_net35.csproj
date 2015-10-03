@@ -38,9 +38,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="platform.net35.pinvoke_sqlite3.anycpu.csproj">
+    <ProjectReference Include="platform.net35.pinvoke_packaged_sqlcipher.anycpu.csproj">
       <Project>{084F8A7A-FD6D-4F7D-8A13-DE9B1D71EFE4}</Project>
-      <Name>platform.net35.pinvoke_sqlite3.anycpu</Name>
+      <Name>platform.net35.pinvoke_packaged_sqlcipher.anycpu</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

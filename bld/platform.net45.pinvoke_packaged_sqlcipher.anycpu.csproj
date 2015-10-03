@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Automatically generated-->
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <IsMac>false</IsMac>
+    <IsMac Condition=" '$(OS)' == 'Unix' AND Exists('/Library/Frameworks') ">true</IsMac>
+    <ReleaseVersion>1.1.1</ReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{8E62D3FC-CE27-427F-A060-F86DA48142F8}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">anycpu</Platform>
+    <DefaultLanguage>en-us</DefaultLanguage>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SQLitePCL</RootNamespace>
+    <AssemblyName>SQLitePCL.raw</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|anycpu' ">
+    <OutputPath>debug\bin\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</OutputPath>
+    <IntermediateOutputPath>debug\obj\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;PINVOKE_FROM_PACKAGED_SQLCIPHER;OLD_REFLECTION</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|anycpu' ">
+    <OutputPath>release\bin\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</OutputPath>
+    <IntermediateOutputPath>release\obj\pcl\net45\pinvoke_packaged_sqlite3\anycpu\</IntermediateOutputPath>
+    <DefineConstants>PINVOKE_FROM_PACKAGED_SQLCIPHER;OLD_REFLECTION</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\src\cs\AssemblyInfo.cs" />
+    <Compile Include="..\src\cs\raw.cs" />
+    <Compile Include="..\src\cs\intptrs.cs" />
+    <Compile Include="..\src\cs\isqlite3.cs" />
+    <Compile Include="..\src\cs\sqlite3_pinvoke.cs" />
+    <Compile Include="..\src\cs\util.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="..\sqlcipher\libpackaged_sqlcipher.dylib" Condition=" $(IsMac) ">
+      <Link>libpackaged_sqlcipher.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\sqlcipher\libpackaged_sqlcipher.so" Condition=" '$(OS)' == 'Unix' AND !$(IsMac)">
+      <Link>libpackaged_sqlcipher.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\sqlcipher\x86\packaged_sqlcipher.dll" Condition=" '$(OS)' == 'Windows_NT' ">
+      <Link>x86\packaged_sqlcipher.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\sqlcipher\x64\packaged_sqlcipher.dll" Condition=" '$(OS)' == 'Windows_NT' ">
+      <Link>x64\packaged_sqlcipher.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
