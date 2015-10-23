@@ -44,7 +44,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ManifestResourceWithNoCulture Include="$(ProjectDir)\..\sqlcipher\packaged_sqlcipher.a">
+    <ManifestResourceWithNoCulture Include="..\sqlcipher\packaged_sqlcipher.a">
       <Link>packaged_sqlcipher.a</Link>
     </ManifestResourceWithNoCulture>
   </ItemGroup>
