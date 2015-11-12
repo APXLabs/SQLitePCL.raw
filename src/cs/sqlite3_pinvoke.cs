@@ -1201,7 +1201,7 @@ namespace SQLitePCL
 #elif PINVOKE_FROM_PACKAGED_SQLITE3
         private const string SQLITE_DLL = "packaged_sqlite3";
 #elif PINVOKE_FROM_PACKAGED_SQLCIPHER
-        private const string SQLITE_DLL = "packaged_sqlcipher";
+        private const string SQLITE_DLL = "sqlcipher";
 #elif PINVOKE_FROM_SQLITE3_DLL
         private const string SQLITE_DLL = "sqlite3.dll";
 #elif PINVOKE_ANYCPU_NET45
