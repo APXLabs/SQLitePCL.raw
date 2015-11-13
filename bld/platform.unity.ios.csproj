@@ -8,13 +8,14 @@
     <RootNamespace>platform.unity.ios</RootNamespace>
     <AssemblyName>SQLitePCL.raw</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ReleaseVersion>1.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Debug\bin\unity\ios</OutputPath>
-    <DefineConstants>DEBUG;PLATFORM_UNIFIED;PINVOKE_FROM_SQLITE3;OLD_REFLECTION;</DefineConstants>
+    <DefineConstants>DEBUG;__UNITY__;PLATFORM_UNIFIED;PINVOKE_FROM_INTERNAL_SQLITE3;OLD_REFLECTION;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -31,6 +32,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\Couchbase.Lite.Unity\vendor\Unity\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -52,5 +56,11 @@
     <Compile Include="..\src\cs\util.cs">
       <Link>util.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Couchbase.Lite.Net35\vendor\Rackspace\Rackspace.Threading\System.Threading.Tasks.Net35\System.Threading.Tasks.Net35.csproj">
+      <Project>{DCB5D745-525C-46A1-BFC0-E12F87AB6165}</Project>
+      <Name>System.Threading.Tasks.Net35</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

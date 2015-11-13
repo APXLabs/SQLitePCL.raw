@@ -46,20 +46,20 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedNativeLibrary Include="..\sqlcipher\libs\arm64-v8a\libpackaged_sqlcipher.so">
-      <Link>arm64-v8a\libpackaged_sqlcipher.so</Link>
+    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\arm64-v8a\libsqlcipher.so">
+      <Link>arm64-v8a\libsqlcipher.so</Link>
     </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="..\sqlcipher\libs\armeabi\libpackaged_sqlcipher.so">
-      <Link>armeabi\libpackaged_sqlcipher.so</Link>
+    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\armeabi\libsqlcipher.so">
+      <Link>armeabi\libsqlcipher.so</Link>
     </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="..\sqlcipher\libs\armeabi-v7a\libpackaged_sqlcipher.so">
-      <Link>armeabi-v7a\libpackaged_sqlcipher.so</Link>
+    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\armeabi-v7a\libsqlcipher.so">
+      <Link>armeabi-v7a\libsqlcipher.so</Link>
     </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="..\sqlcipher\libs\x86\libpackaged_sqlcipher.so">
-      <Link>x86\libpackaged_sqlcipher.so</Link>
+    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\x86\libsqlcipher.so">
+      <Link>x86\libsqlcipher.so</Link>
     </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="..\sqlcipher\libs\x86_64\libpackaged_sqlcipher.so">
-      <Link>x86_64\libpackaged_sqlcipher.so</Link>
+    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\x86_64\libsqlcipher.so">
+      <Link>x86_64\libsqlcipher.so</Link>
     </EmbeddedNativeLibrary>
   </ItemGroup>
 </Project>

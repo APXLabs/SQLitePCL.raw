@@ -48,7 +48,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="..\vendor\sqlcipher\libs\osx\libsqlcipher.dylib" Condition=" $(IsMac) ">
-      <Link>libpackaged_sqlcipher.dylib</Link>
+      <Link>libsqlcipher.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\vendor\sqlcipher\libs\linux\amd64\libsqlcipher.so" Condition=" '$(OS)' == 'Unix' AND !$(IsMac)">

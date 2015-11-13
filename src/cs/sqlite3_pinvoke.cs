@@ -24,7 +24,7 @@
 // See the Apache 2 License for the specific language governing permissions and limitations under the License.
 
 #if PINVOKE_FROM_INTERNAL_SQLITE3
-
+#if !__UNITY__
 #if PLATFORM_UNIFIED
 
 [assembly: ObjCRuntime.LinkWith(
@@ -45,14 +45,14 @@
         )
         ]
 #endif
-
+#endif
 #endif
 
 #if PINVOKE_FROM_INTERNAL_SQLCIPHER
 
 #if PLATFORM_UNIFIED
 [assembly: ObjCRuntime.LinkWith(
-        "packaged_sqlcipher.a",
+        "libsqlcipher.a",
         LinkTarget = ObjCRuntime.LinkTarget.Simulator | ObjCRuntime.LinkTarget.Simulator64 | ObjCRuntime.LinkTarget.ArmV7 | ObjCRuntime.LinkTarget.Arm64,
         ForceLoad=true,
         LinkerFlags="",
@@ -101,7 +101,11 @@ namespace SQLitePCL
 #if PLATFORM_IOS
     using MonoTouch;
 #elif PLATFORM_UNIFIED
+    #if __UNITY__
+    using AOT;
+    #else
     using ObjCRuntime;
+    #endif
 #endif
 
     /// <summary>
@@ -111,7 +115,7 @@ namespace SQLitePCL
     [Android.Runtime.Preserve(AllMembers=true)]
 #elif PLATFORM_IOS
 	[MonoTouch.Foundation.Preserve(AllMembers = true)]
-#elif PLATFORM_UNIFIED
+#elif PLATFORM_UNIFIED && !__UNITY__
 	[Foundation.Preserve(AllMembers = true)]
 #endif
     public sealed class SQLite3Provider : ISQLite3Provider
