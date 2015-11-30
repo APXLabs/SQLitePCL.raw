@@ -49,20 +49,20 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="..\sqlcipher\libpackaged_sqlcipher.dylib" Condition=" $(OS) == 'Unix' AND Exists('/Library/Frameworks') ">
-      <Link>libpackaged_sqlcipher.dylib</Link>
+    <None Include="..\vendor\sqlcipher\libs\osx\libsqlcipher.dylib" Condition=" $(OS) == 'Unix' AND Exists('/Library/Frameworks') ">
+      <Link>libsqlcipher.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\sqlcipher\libpackaged_sqlcipher.so" Condition=" $(OS) == 'Unix' AND !Exists('/Library/Frameworks') ">
-      <Link>libpackaged_sqlcipher.so</Link>
+    <None Include="..\vendor\sqlcipher\libs\linux\x86_64\libsqlcipher.so" Condition=" $(OS) == 'Unix' AND !Exists('/Library/Frameworks') ">
+      <Link>libsqlcipher.so</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\sqlcipher\x86\packaged_sqlcipher.dll" Condition=" $(OS) == 'Windows_NT' ">
-      <Link>x86\packaged_sqlcipher.dll</Link>
+    <None Include="..\vendor\sqlcipher\libs\windows\x86\sqlcipher.dll" Condition=" $(OS) == 'Windows_NT' ">
+      <Link>x86\sqlcipher.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\sqlcipher\x64\packaged_sqlcipher.dll" Condition=" $(OS) == 'Windows_NT' ">
-      <Link>x64\packaged_sqlcipher.dll</Link>
+    <None Include="..\vendor\sqlcipher\libs\windows\x86_64\sqlcipher.dll" Condition=" $(OS) == 'Windows_NT' ">
+      <Link>x64\sqlcipher.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
