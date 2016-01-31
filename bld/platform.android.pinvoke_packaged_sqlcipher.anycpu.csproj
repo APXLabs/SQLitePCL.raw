@@ -43,23 +43,5 @@
     <Compile Include="..\src\cs\sqlite3_pinvoke.cs" />
     <Compile Include="..\src\cs\util.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
-  <ItemGroup />
-  <ItemGroup>
-    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\arm64-v8a\libsqlcipher.so">
-      <Link>arm64-v8a\libsqlcipher.so</Link>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\armeabi\libsqlcipher.so">
-      <Link>armeabi\libsqlcipher.so</Link>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\armeabi-v7a\libsqlcipher.so">
-      <Link>armeabi-v7a\libsqlcipher.so</Link>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\x86\libsqlcipher.so">
-      <Link>x86\libsqlcipher.so</Link>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="..\vendor\sqlcipher\libs\android\x86_64\libsqlcipher.so">
-      <Link>x86_64\libsqlcipher.so</Link>
-    </EmbeddedNativeLibrary>
-  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
