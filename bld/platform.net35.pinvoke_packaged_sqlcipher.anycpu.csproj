@@ -54,24 +54,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="..\vendor\sqlcipher\libs\osx\libsqlcipher.dylib" Condition=" $(OS) == 'Unix' AND Exists('/Library/Frameworks') ">
-      <Link>libsqlcipher.dylib</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\vendor\sqlcipher\libs\linux\x86_64\libsqlcipher.so" Condition=" $(OS) == 'Unix' AND !Exists('/Library/Frameworks') ">
-      <Link>libsqlcipher.so</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\vendor\sqlcipher\libs\windows\x86\sqlcipher.dll" Condition=" $(OS) == 'Windows_NT' ">
-      <Link>x86\sqlcipher.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\vendor\sqlcipher\libs\windows\x86_64\sqlcipher.dll" Condition=" $(OS) == 'Windows_NT' ">
-      <Link>x64\sqlcipher.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\..\Couchbase.Lite.Net35\vendor\Rackspace\Rackspace.Threading\System.Threading.Tasks.Net35\System.Threading.Tasks.Net35.csproj">
       <Project>{DCB5D745-525C-46A1-BFC0-E12F87AB6165}</Project>
       <Name>System.Threading.Tasks.Net35</Name>
