@@ -38,6 +38,7 @@
     <ProjectReference Include="portable.profile78.csproj">
       <Project>{84547E16-A872-418D-82A6-B57ADEE290AE}</Project>
       <Name>portable.profile78</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
 </Project>
