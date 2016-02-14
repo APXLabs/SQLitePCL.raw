@@ -1200,12 +1200,10 @@ namespace SQLitePCL
         private const string SQLITE_DLL = "__Internal";
 #elif PINVOKE_FROM_INTERNAL_SQLCIPHER
         private const string SQLITE_DLL = "__Internal";
-#elif PINVOKE_FROM_SQLITE3 || PINVOKE_FROM_PACKAGED_SQLCIPHER
-    #if __ANDROID__ && PINVOKE_FROM_PACKAGED_SQLCIPHER
+#elif PINVOKE_FROM_PACKAGED_SQLCIPHER
         private const string SQLITE_DLL = "sqlcipher";
-    #else
+#elif PINVOKE_FROM_SQLITE3
         private const string SQLITE_DLL = "sqlite3";
-    #endif
 #elif PINVOKE_FROM_PACKAGED_SQLITE3
         private const string SQLITE_DLL = "packaged_sqlite3";
 #elif PINVOKE_FROM_SQLITE3_DLL
